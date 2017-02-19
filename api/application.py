@@ -26,13 +26,16 @@ def check_image():
 
 		if prediction == 1:
 			os.remove(path)
+			print('meme')
 			return jsonify({'type':'meme'})
 		else:
 			os.remove(path)
+			print('image')
 			return jsonify({'type':'image'})
 	except:
 		os.remove(path)
-		return jsonify({'type':'image'})
+		print('error')
+		return jsonify({'type':'meme'})
 
 def img_to_matrix(filename):
 	img = Image.open(filename)

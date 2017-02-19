@@ -10,7 +10,7 @@ import random
 
 
 STANDARD_SIZE = (300, 167)
-path_to_collection = "../collection/"
+path_to_collection = "collection/"
 
 def img_to_matrix(filename):
 	img = Image.open(filename)
@@ -40,7 +40,7 @@ def train(data, labels):
 def batch_run():
 	data = []
 
-	path = path_to_collection + '/images/'
+	path = path_to_collection + 'images/'
 	labels = []
 	images = []
 	files = []
@@ -49,7 +49,7 @@ def batch_run():
 		files.append(f)
 		images.append(f)
 		labels.append(0) #normal image
-	path = path_to_collection + 'collection/memes/'
+	path = path_to_collection + 'memes/'
 	directory = [path+f for f in listdir(path)]
 	for f in directory:
 		files.append(f)
