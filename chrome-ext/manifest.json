@@ -1,0 +1,26 @@
+{
+    "manifest_version": 2,
+    "name": "Stanley Memer",
+    "description": "Shields users from memes passing the dankness threshold",
+    "version": "1.0",
+    "content_scripts": [
+        {
+            "matches": ["*://*/*"],
+            "js": ["content.js"],
+            "run_at": "document_end"
+        }
+    ],
+    "permissions":[
+        "http://localhost:5000/*",
+        "http://stanleymemer-env.us-east-1.elasticbeanstalk.com/*",
+        "http://s.quickmeme.com/*",
+        "https://img.ifcdn.com/*",
+        "http://www.google.com/",
+        "http://localhost:5000/*",
+        "http://localhost/*",
+        "http://127.0.0.1:5000/*"
+    ],
+    "web_accessible_resources": [
+        "images/TooDank.jpg"
+    ]
+}
