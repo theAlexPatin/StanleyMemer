@@ -10,7 +10,7 @@ import threading
 path_to_chromedriver = '/usr/local/bin/chromedriver'    ####Change path!
 
 sQuery = ''
-
+queries = ['memes', 'dank memes', 'trees', 'pepe memes', 'obamabiden memes', 'people', 'music', 'wildlife', 'nature', 'architecture', 'things']
 
 
 def scroll(driver):
@@ -54,14 +54,15 @@ def findImages(driver):
 
 def main():
     driver = webdriver.Chrome(executable_path = path_to_chromedriver)
-    driver.get("https://www.google.com/images")
-    elem = driver.find_element_by_id("lst-ib")	#Finds the search box (has this id tag)
-    elem.send_keys(sQuery)
-    elem.send_keys(Keys.RETURN)
-    scroll(driver)	#Dynamically loads images
-    findImages(driver)
+    for q in queries:
+        sQuery = q
+        driver.get("https://www.google.com/images")
+        elem = driver.find_element_by_id("lst-ib")	#Finds the search box (has this id tag)
+        elem.send_keys(sQuery)
+        elem.send_keys(Keys.RETURN)
+        scroll(driver)	#Dynamically loads images
+        findImages(driver)
 
 
 if __name__ == "__main__":
-    sQuery = input("Please enter search query: ")
     main()
