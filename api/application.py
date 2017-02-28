@@ -5,6 +5,7 @@ import os
 from PIL import Image
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
+from OpenSSL import SSL
 
 knn = joblib.load('knn.pkl')
 pca = joblib.load('pca.pkl')
@@ -13,7 +14,7 @@ STANDARD_SIZE = (300, 167)
 application = Flask(__name__)
 
 
-@application.route('/api/check_image', methods=['POST'])
+@application.route('/api/check_image', methods=['GET'])
 def check_image():
 	try:
 		imgUrl = request.json['url']
@@ -27,15 +28,18 @@ def check_image():
 		if prediction == 1:
 			os.remove(path)
 			print('meme')
-			return jsonify({'type':'meme'})
+			return jsonify({'type':'meme', 'src':imgUrl})
 		else:
 			os.remove(path)
 			print('image')
 			return jsonify({'type':'image'})
 	except:
-		os.remove(path)
+		try:
+			os.remove(path)
+		except:
+			pass
 		print('error')
-		return jsonify({'type':'meme'})
+		return jsonify({'type':'error'})
 
 def img_to_matrix(filename):
 	img = Image.open(filename)
@@ -45,4 +49,6 @@ def img_to_matrix(filename):
 	return img
 
 if __name__ == '__main__':
+	#context= ('host.cert', 'host.key')
+	#application.run(debug=True, ssl_context=context)
 	application.run(debug=True)
