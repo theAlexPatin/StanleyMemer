@@ -11,7 +11,7 @@ path_to_chromedriver = '/usr/local/bin/chromedriver'    ####Change path!
 
 sQuery = ''
 queries = ['memes', 'dank memes', 'trees', 'pepe memes', 'obamabiden memes', 'people', 'music', 'wildlife', 'nature', 'architecture', 'things']
-queries = ['trump memes']
+queries = {'obamabiden memes':'memes'}
 
 def scroll(driver):
     driver.implicitly_wait(100)
@@ -22,17 +22,21 @@ def scroll(driver):
 
 def downloadImage(imgUrl):
     filename = imgUrl.split('/')[-1]	#Gets the name of the image
-    try:
-        path = 'images'
-        if 'memes' in sQuery:
-            path = 'memes'
-        if not os.path.exists(path):
-            os.makedirs(path)
-        path = path +'/'+ filename
-        urllib.request.urlretrieve(imgUrl, path)
-        print(path)
-    except:
-        print('error downloading')
+    if filename.endswith('.png') == False or filename.endswith('.jpeg') == False or filename.endswith('.jpg') == False:
+        try:
+            path = 'images'
+            if queries[sQuery] == 'memes':
+                path = 'memes'
+            if not os.path.exists(path):
+                os.makedirs(path)
+            path = path +'/'+ filename
+            urllib.request.urlretrieve(imgUrl, path)
+            print(path)
+        except:
+
+            print('error downloading')
+    else:
+        print("Invalid filetype")
 
 def findImages(driver):
     source = driver.page_source		#Gets the source of the page
@@ -54,7 +58,7 @@ def findImages(driver):
 
 def main():
     driver = webdriver.Chrome(executable_path = path_to_chromedriver)
-    for q in queries:
+    for q,v in queries.items():
         sQuery = q
         driver.get("https://www.google.com/images")
         elem = driver.find_element_by_id("lst-ib")	#Finds the search box (has this id tag)
