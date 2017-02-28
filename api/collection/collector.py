@@ -10,8 +10,17 @@ import threading
 path_to_chromedriver = '/usr/local/bin/chromedriver'    ####Change path!
 
 sQuery = ''
-queries = ['memes', 'dank memes', 'trees', 'pepe memes', 'obamabiden memes', 'people', 'music', 'wildlife', 'nature', 'architecture', 'things']
-queries = {'obamabiden memes':'memes'}
+queries = {
+    'memes':'meme', 
+    'dank memes':'meme', 
+    'increasingly verbose memes':'meme', 
+    'y u no memes':'meme',
+    'student':'image', 
+    'olympics': 'image', 
+    'office supplies':'image',
+    'fruits':'image', 
+    'vegetables':'image'} #{'query':'meme/image'}
+images = {}
 
 def scroll(driver):
     driver.implicitly_wait(100)
@@ -20,12 +29,12 @@ def scroll(driver):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight/%s);" % scheight)
         scheight += .01
 
-def downloadImage(imgUrl):
+def downloadImage(imgUrl, meme):
     filename = imgUrl.split('/')[-1]	#Gets the name of the image
     if filename.endswith('.png') == False or filename.endswith('.jpeg') == False or filename.endswith('.jpg') == False:
         try:
             path = 'images'
-            if queries[sQuery] == 'memes':
+            if meme:
                 path = 'memes'
             if not os.path.exists(path):
                 os.makedirs(path)
@@ -33,40 +42,44 @@ def downloadImage(imgUrl):
             urllib.request.urlretrieve(imgUrl, path)
             print(path)
         except:
-
             print('error downloading')
     else:
         print("Invalid filetype")
 
-def findImages(driver):
+def findImages(driver, meme):
     source = driver.page_source		#Gets the source of the page
     soup = BeautifulSoup(source, 'html')	#Parses the source
-    driver.close()	
     threads = []
     try:
         for data in soup.find_all('div', attrs={'class': 'rg_meta'}):		#Finds all "a" tags with the "rg_l" class
             data = json.loads(data.string)
             url = data['ou']
-            t = threading.Thread(target=downloadImage, args=(url,))
-            t.start()
-            threads.append(t)
+            images[url] = meme
     except:
         print("There were no images available")
-
-    for t in threads:
-        t.join()
 
 def main():
     driver = webdriver.Chrome(executable_path = path_to_chromedriver)
     for q,v in queries.items():
         sQuery = q
+        meme = False
+        if v == 'meme':
+            meme = True
+        print(sQuery)
         driver.get("https://www.google.com/images")
         elem = driver.find_element_by_id("lst-ib")	#Finds the search box (has this id tag)
         elem.send_keys(sQuery)
         elem.send_keys(Keys.RETURN)
         scroll(driver)	#Dynamically loads images
-        findImages(driver)
-
+        findImages(driver, meme)
+    driver.close()
+    threads = []
+    for k,v in images.items():
+        t = threading.Thread(target=downloadImage, args=(k, v,))
+        t.start()
+        threads.append(t)
+    for t in threads:
+        t.join()
 
 if __name__ == "__main__":
     main()
