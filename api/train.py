@@ -20,10 +20,11 @@ def img_to_matrix(filename):
 	return img
 
 def train(data, labels):
-	train_x = data[0:len(data)*0.8]
-	test_x = data[len(data)*0.8+1:]
-	train_y = labels[0:int(len(labels)*0.8)]
-	test_y = labels[int(len(labels)*0.8+1):]
+	percent = 0.9 #percent of images used for training
+	train_x = data[0:len(data)*percent]
+	test_x = data[len(data)*percent+1:]
+	train_y = labels[0:int(len(labels)*percent)]
+	test_y = labels[int(len(labels)*percent+1):]
 	pca = RandomizedPCA(n_components=10)
 	train_x = pca.fit_transform(train_x)
 	test_x = pca.transform(test_x)
@@ -76,7 +77,6 @@ def batch_run():
 	labels = success_labels
 	images = success_images
 	files = success_files
-	print(files)
 	data = np.array(data)
 	predictions = train(data, labels)
 	correct = 0

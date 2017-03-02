@@ -10,16 +10,7 @@ import threading
 path_to_chromedriver = '/usr/local/bin/chromedriver'    ####Change path!
 
 sQuery = ''
-queries = {
-    'memes':'meme', 
-    'dank memes':'meme', 
-    'increasingly verbose memes':'meme', 
-    'y u no memes':'meme',
-    'student':'image', 
-    'olympics': 'image', 
-    'office supplies':'image',
-    'fruits':'image', 
-    'vegetables':'image'} #{'query':'meme/image'}
+queries = {} #{'query':'meme/image'}
 images = {}
 
 def scroll(driver):
